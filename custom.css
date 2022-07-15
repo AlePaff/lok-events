@@ -4,6 +4,7 @@
 	margin-top: 40px;
 }
 
+
 section{
 	padding: 20px;
 	margin-top: 20px;
@@ -26,63 +27,50 @@ footer{
 /*colores de cada seccion*/
 .seccion-material-apuntes{background-color: #EEF6F4;}
 /*.seccion-material-apuntes{background-color: #f9dbd4;}*/
-.seccion-general{background-color: #EEFFEB;}
-.seccion-cursos-opiniones{background-color: #EEF6F4;}
-.seccion-organizacion{background-color: #E5FBFF;}
-.seccion-grupos{background-color: #EEFFEB;}
-.seccion-noticias{background-color: #E5FBFF;}
 .seccion-varios{background-color: #EEFFEB;}
 
 body{
-	background-color: #FFFFFF;
+		text-align:center;
+	/*color que tiene google*/
+	background-color: #202124;
+	color: darkgray;
 
 	/*background-color: #343838;*/
-	/*color: darkgray;*/
+		padding: 20px;
 }
 
 
 
-/*para que las imagenes queden todas del mismo tamaño*/
-.card-img-top {
-    width: 100%;
-    height: 20vw;
-    /*object-fit: scale-down;       https://developer.mozilla.org/es/docs/Web/CSS/object-fit*/
-    object-fit: cover;
+
+
+/*estilos de las tablas*/
+table {
+	border-collapse: collapse;
+	border: 2px gray solid;
+	font: 15px sans-serif;
+	text-align:center;
+
+	display: table;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+td {
+	border: 2px gray solid;
+	padding: 5px;
+}
+
+/*para striped rows*/
+tr:nth-child(even) {background-color: #2c3034;}
+tr:nth-child(odd) {background-color: #212529;}
+/*pasar mouse por encima y que resalte una fila*/
+tr:hover {background-color: #364F6B;}
+/*pero que no resalte la primera (pinta del mismo color que el de las columnas pares)*/
+tr:first-child:hover {background-color: #212529;}
+
 
 /*
-    filter: blur(2px);
-  	-webkit-filter: blur(2px);*/
-
-}
-
-
-
-/*zoom al pasar el mouse por encima https://w3bits.com/css-image-hover-zoom/ */
-/* [1] The container */
-.img-hover-zoom {
-  height: 300px; /* [1.1] Set it as per your need */
-  overflow: hidden; /* [1.2] Hide the overflowing of child elements */
-}
-/* [2] Transition property for smooth transformation of images */
-.img-hover-zoom img {
-  transition: transform .2s ease;
-}
-/* [3] Finally, transforming the image when container gets hovered */
-.img-hover-zoom:hover img {
-  transform: scale(1.05);
-}
-
-
-/*invertir colores del icono de github*/
-.invert_effect {
-  filter: invert(100%);
-}
-
-
-/*https://www.w3schools.com/howto/howto_css_transition_hover.asp*/
-.card-varios-transition:hover {
-	background-color: #AFC9E4;
-    color: white;
-    opacity: 0.6;
-		transition: 0.2s;
-}
+td stands for table data.
+tr stands for table row.
+th stands for table header
+*/
