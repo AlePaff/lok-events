@@ -59,8 +59,40 @@ function getDayName(dateStr)
 
 // const datosJSON = '[{"name" : "Ashwin", "age" : "20"},{"name" : "Abhinandan", "age" : "20"}]';
 
-const datosJSON = '[{"EventsName": "The great kingdom", "dateStart": "16/6/2022", "dateEnd": "25/6/2022", "periocity": "14"},{"EventsName": "The great construction", "dateStart": "27/6/2022", "dateEnd": "29/6/2022", "periocity": "14"},{"EventsName": "Faster growth; faster development", "dateStart": "21/6/2022", "dateEnd": "24/6/2022", "periocity": "14"}]';
-const datos = JSON.parse(datosJSON);
+// const datosJSON = '[{"eventsName": "The growth of the kingdom",\
+//    "category": "Devmeloment",\
+//    "dateStart1": "27/5/2022",\
+//    "dateEnd1": "28/5/2022"}]';
+
+
+
+// const datos = JSON.parse(datosJSON);
+
+// fetch("events.json")
+//          .then(response => response.json())       //convertir en json
+//          .then(data => {const datos = data})     //mostrar el archivo en la consola
+
+
+
+
+// fetch('events.json')
+//     .then(data => data.json())
+//     .then(success => myFunc(success));
+
+// function myFunc(success) {
+// //do what you want HERE.
+// console.log(success)
+// }
+
+
+var arrayToday = procesar();
+
+
+async function procesar(){
+   const response = await fetch("events.json");
+   const datos = await response.json();
+
+   console.log(datos);
 
 
 var today = new Date();
@@ -72,23 +104,26 @@ var arraySoon = [];
 
 // convertir los datos del JSON en variables para poder usarlas
 for (let i = 0; i < datos.length; i++) {
-   const fecha = new Date(convertToDate(datos[i].dateStart));
+   const fecha = new Date(convertToDate(datos[i].dateStart1));
    var periocidad = 14;
    var difference = today.getTime() - fecha.getTime();
    var days = Math.ceil(difference / (1000 * 3600 * 24));            //me lo deja en milisegundos asi que debo transformarlo a dias
    var daysTillNextDate = Math.ceil(days/periocidad);
    var nextDate = addDays(fecha, daysTillNextDate*periocidad);
 
-   document.write(" se repetirá el " + getDayName(nextDate) + "</br>");
+   // document.write(" se repetirá el " + getDayName(nextDate) + "</br>");
+
 
 
    dict = {      
-          evento:   datos[i].EventsName,
-          fechaInicio: datos[i].dateStart,
-          periocidad: datos[i].periocity,
+          evento:   datos[i].eventsName,
+          fechaInicio: datos[i].dateStart1,
+          periocidad: datos[i].periocity1,
           proximoDia: getDayName(addDays(fecha, daysTillNextDate*periocidad)),
-          // duracion: datos[i].duration,
-          descripcion: "desc" + i
+          duracion: datos[i].duration,
+          descripcion: datos[i].description,
+          consistente: datos[i].consistent,
+          categoria: datos[i].category
       };
 
 
@@ -112,13 +147,19 @@ for (let i = 0; i < datos.length; i++) {
 // console.log("eventos proximos" + "</br>");
 // console.log(arraySoon);
 
+// si la prox. fecha es la de hoy entonces va en hoy
+// otra forma es ordenar el diccionario
 // poner en 3 arrays diferentes eventos de Hoy, Mañana, y Proximos (eventos de ayer ya veré como lo hago)
 
 
+document.getElementById("table_today").innerHTML = imprimirTabla(arrayToday);
+
+
+}
 
 // mostrar tablas en pantalla
 nombresTabla = "<tr><th>"+"Events name"+"</th><th>"+"Next date"+"</th><th>"+"It repeats every: (days)"
-+"</th><th>"+"Duration of the event"+"</th><th>"+"Quick description"+"</th><th>"+"fecha de inicio"+"</th>";
++"</th><th>"+"Duration of the event"+"</th><th>"+"Quick description"+"</th><th>"+"fecha de inicio"+"</th><th>"+"consistent"+"</th>";
 
 function imprimirTabla(eventosSeccion){  
    // eventosSeccion == lista de diccionarios
@@ -127,7 +168,7 @@ function imprimirTabla(eventosSeccion){
    for(var i = 0; i<eventosSeccion.length; i++){
       dicActual = eventosSeccion[i];
       tabla += "<tr><td>" + dicActual.evento + "</td><td>"+ dicActual.proximoDia + "</td><td>"+ dicActual.periocidad
-      + "</td><td>"+ dicActual.duracion + "</td><td>"+ dicActual.descripcion + "</td><td>"+ dicActual.fechaInicio + "</tr>";
+      + "</td><td>"+ dicActual.duracion + "</td><td>"+ dicActual.descripcion + "</td><td>"+ dicActual.fechaInicio+"</td><td>"+dicActual.consistente+"</tr>";
    }
 
    tabla += "</table>"
@@ -135,5 +176,4 @@ function imprimirTabla(eventosSeccion){
 };
 
 
-document.write(imprimirTabla(arrayToday));
 
