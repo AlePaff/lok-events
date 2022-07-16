@@ -11,13 +11,11 @@ function convertToDate(dateString) {
       // const date = new Date(year, +month, +day);
   }
 
-
 function addDays(date, days) {
   var result = new Date(date);
   result.setDate(result.getDate() + days);
   return result;
 }
-
 
 function getDayName(dateStr)
 {
@@ -56,106 +54,76 @@ function getDayName(dateStr)
 // ========== con datos
 
 
+ 
 
-// const datosJSON = '[{"name" : "Ashwin", "age" : "20"},{"name" : "Abhinandan", "age" : "20"}]';
+crearTablas();
 
-// const datosJSON = '[{"eventsName": "The growth of the kingdom",\
-//    "category": "Devmeloment",\
-//    "dateStart1": "27/5/2022",\
-//    "dateEnd1": "28/5/2022"}]';
-
-
-
-// const datos = JSON.parse(datosJSON);
-
-// fetch("events.json")
-//          .then(response => response.json())       //convertir en json
-//          .then(data => {const datos = data})     //mostrar el archivo en la consola
-
-
-
-
-// fetch('events.json')
-//     .then(data => data.json())
-//     .then(success => myFunc(success));
-
-// function myFunc(success) {
-// //do what you want HERE.
-// console.log(success)
-// }
-
-
-var arrayToday = procesar();
-
-
-async function procesar(){
+async function crearTablas(){
    const response = await fetch("events.json");
    const datos = await response.json();
 
-   console.log(datos);
+   // console.log(datos);
+   var today = new Date();
+   var tomorrow = new Date();
+   tomorrow.setDate(tomorrow.getDate()+1);
 
+   var arrayToday = [];       //lista de diccionarios
+   var arrayTomorrow = [];
+   var arraySoon = [];
 
-var today = new Date();
-var arrayToday = [];       //lista de diccionarios
-var arrayTomorrow = [];
-var arraySoon = [];
+   // convertir los datos del JSON en variables para poder usarlas
+   for (let i = 0; i < datos.length; i++) {
+      const fecha = new Date(convertToDate(datos[i].dateStart1));
+      var periocidad = datos[i].periocity1;
+      var difference = today.getTime() - fecha.getTime();
+      var days = Math.floor(difference / (1000 * 3600 * 24));            //me lo deja en milisegundos asi que debo transformarlo a dias
+      var daysTillNextDate = Math.ceil(days/periocidad);
+      var nextDate = addDays(fecha, daysTillNextDate*periocidad);
 
+      // document.write(" se repetirá el " + getDayName(nextDate) + "</br>");
+      dict = {      
+             evento:   datos[i].eventsName,
+             fechaInicio: datos[i].dateStart1,
+             periocidad: datos[i].periocity1,
+             proximoDia: getDayName(addDays(fecha, daysTillNextDate*periocidad)),
+             duracion: datos[i].duration,
+             descripcion: datos[i].description,
+             consistente: datos[i].consistent,
+             categoria: datos[i].category
+         };
 
+      // clasificacion de las secciones
+      if (nextDate.toDateString() == today.toDateString()) {
+         arrayToday.push(dict);
+      } else if (nextDate.toDateString() == tomorrow.toDateString()) {
+         arrayTomorrow.push(dict);
+      } else {
+         arraySoon.push(dict);
+      }
 
-// convertir los datos del JSON en variables para poder usarlas
-for (let i = 0; i < datos.length; i++) {
-   const fecha = new Date(convertToDate(datos[i].dateStart1));
-   var periocidad = 14;
-   var difference = today.getTime() - fecha.getTime();
-   var days = Math.ceil(difference / (1000 * 3600 * 24));            //me lo deja en milisegundos asi que debo transformarlo a dias
-   var daysTillNextDate = Math.ceil(days/periocidad);
-   var nextDate = addDays(fecha, daysTillNextDate*periocidad);
+   }
 
-   // document.write(" se repetirá el " + getDayName(nextDate) + "</br>");
+   // tests
+   // console.log("eventos de hoy" + "</br>");
+   // console.log(arrayToday);
+   // console.log("eventos de mañana" + "</br>");
+   // console.log(arrayTomorrow);
+   // console.log("eventos proximos" + "</br>");
+   // console.log(arraySoon);
 
+   // si la prox. fecha es la de hoy entonces va en hoy
+   // otra forma es ordenar el diccionario
+   // poner en 3 arrays diferentes eventos de Hoy, Mañana, y Proximos (eventos de ayer ya veré como lo hago)
 
-
-   dict = {      
-          evento:   datos[i].eventsName,
-          fechaInicio: datos[i].dateStart1,
-          periocidad: datos[i].periocity1,
-          proximoDia: getDayName(addDays(fecha, daysTillNextDate*periocidad)),
-          duracion: datos[i].duration,
-          descripcion: datos[i].description,
-          consistente: datos[i].consistent,
-          categoria: datos[i].category
-      };
-
-
-   arrayToday.push(dict);
-
-// clasificacion de las secciones
-   // if (daysTillNextDate == 0) {
-   //    arrayToday.push(dict);
-   // } else if (daysTillNextDate == 1) {
-   //    arrayTomorrow.push(dict);
-   // } else {
-   //    arraySoon.push(dict);
-   // }   
+   document.getElementById("table_today").innerHTML = imprimirTabla(arrayToday);
+   document.getElementById("table_tomorrow").innerHTML = imprimirTabla(arrayTomorrow);
+   document.getElementById("table_soon").innerHTML = imprimirTabla(arraySoon);
 }
 
-// tests
-// console.log("eventos de hoy" + "</br>");
-// console.log(arrayToday);
-// console.log("eventos de mañana" + "</br>");
-// console.log(arrayTomorrow);
-// console.log("eventos proximos" + "</br>");
-// console.log(arraySoon);
-
-// si la prox. fecha es la de hoy entonces va en hoy
-// otra forma es ordenar el diccionario
-// poner en 3 arrays diferentes eventos de Hoy, Mañana, y Proximos (eventos de ayer ya veré como lo hago)
 
 
-document.getElementById("table_today").innerHTML = imprimirTabla(arrayToday);
 
 
-}
 
 // mostrar tablas en pantalla
 nombresTabla = "<tr><th>"+"Events name"+"</th><th>"+"Next date"+"</th><th>"+"It repeats every: (days)"
@@ -174,6 +142,3 @@ function imprimirTabla(eventosSeccion){
    tabla += "</table>"
    return tabla
 };
-
-
-
