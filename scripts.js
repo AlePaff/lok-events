@@ -54,7 +54,8 @@ function getDayName(dateStr)
 // ========== con datos
 
 
- 
+
+
 
 crearTablas();
 
@@ -80,10 +81,14 @@ async function crearTablas(){
       var daysTillNextDate = Math.ceil(days/periocidad);
       var nextDate = addDays(fecha, daysTillNextDate*periocidad);
 
+      var nextDateEnd = structuredClone(nextDate);       //hacer una copia profunda (una desconectada de la original)
+      nextDateEnd.setDate(nextDateEnd.getDate() + datos[i].duration);
+
       // document.write(" se repetirá el " + getDayName(nextDate) + "</br>");
       dict = {      
              evento:   datos[i].eventsName,
              fechaInicio: datos[i].dateStart1,
+             fechaFinal: (datos[i].dateEnd1),
              periocidad: datos[i].periocity1,
              proximoDia: getDayName(addDays(fecha, daysTillNextDate*periocidad)),
              duracion: datos[i].duration,
@@ -92,8 +97,12 @@ async function crearTablas(){
              categoria: datos[i].category
          };
 
+console.log(today.getTimezoneOffset());
+
+
       // clasificacion de las secciones
       if (nextDate.toDateString() == today.toDateString()) {
+      // if ((nextDate <= today) && (today <= nextDateEnd)) {        //si hoy cae en el intervalo entre inicio y final del evento
          arrayToday.push(dict);
       } else if (nextDate.toDateString() == tomorrow.toDateString()) {
          arrayTomorrow.push(dict);
@@ -103,17 +112,15 @@ async function crearTablas(){
 
    }
 
-   // tests
-   // console.log("eventos de hoy" + "</br>");
-   // console.log(arrayToday);
-   // console.log("eventos de mañana" + "</br>");
-   // console.log(arrayTomorrow);
-   // console.log("eventos proximos" + "</br>");
-   // console.log(arraySoon);
 
-   // si la prox. fecha es la de hoy entonces va en hoy
-   // otra forma es ordenar el diccionario
-   // poner en 3 arrays diferentes eventos de Hoy, Mañana, y Proximos (eventos de ayer ya veré como lo hago)
+
+
+
+// ordenar lista de diccionarios por fecha en orden ascendiente
+arraySoon.sort(function (a, b) {
+   var dateA = new Date(a.proximoDia), dateB = new Date(b.proximoDia)
+   return dateA - dateB
+});
 
    document.getElementById("table_today").innerHTML = imprimirTabla(arrayToday);
    document.getElementById("table_tomorrow").innerHTML = imprimirTabla(arrayTomorrow);
@@ -128,6 +135,7 @@ async function crearTablas(){
 // mostrar tablas en pantalla
 nombresTabla = "<tr><th>"+"Events name"+"</th><th>"+"Next date"+"</th><th>"+"It repeats every: (days)"
 +"</th><th>"+"Duration of the event"+"</th><th>"+"Quick description"+"</th><th>"+"fecha de inicio"+"</th><th>"+"consistent"+"</th>";
+
 
 function imprimirTabla(eventosSeccion){  
    // eventosSeccion == lista de diccionarios
