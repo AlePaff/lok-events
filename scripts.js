@@ -71,6 +71,8 @@ async function crearTablas(){
    var arrayToday = [];       //lista de diccionarios
    var arrayTomorrow = [];
    var arraySoon = [];
+   var arraySpecial = [];
+
 
    // convertir los datos del JSON en variables para poder usarlas
    for (let i = 0; i < datos.length; i++) {
@@ -101,7 +103,9 @@ console.log(today.getTimezoneOffset());
 
 
       // clasificacion de las secciones
-      if (nextDate.toDateString() == today.toDateString()) {
+      if (datos[i].category == "Special") {
+         arraySpecial.push(dict);
+      } else if (nextDate.toDateString() == today.toDateString()) {
       // if ((nextDate <= today) && (today <= nextDateEnd)) {        //si hoy cae en el intervalo entre inicio y final del evento
          arrayToday.push(dict);
       } else if (nextDate.toDateString() == tomorrow.toDateString()) {
@@ -125,6 +129,8 @@ arraySoon.sort(function (a, b) {
    document.getElementById("table_today").innerHTML = imprimirTabla(arrayToday);
    document.getElementById("table_tomorrow").innerHTML = imprimirTabla(arrayTomorrow);
    document.getElementById("table_soon").innerHTML = imprimirTabla(arraySoon);
+   document.getElementById("table_special").innerHTML = imprimirTabla(arraySpecial);
+
 }
 
 
@@ -134,7 +140,7 @@ arraySoon.sort(function (a, b) {
 
 // mostrar tablas en pantalla
 nombresTabla = "<tr><th>"+"Events name"+"</th><th>"+"Next date"+"</th><th>"+"It repeats every: (days)"
-+"</th><th>"+"Duration of the event"+"</th><th>"+"Quick description"+"</th><th>"+"fecha de inicio"+"</th><th>"+"consistent"+"</th>";
++"</th><th>"+"Duration of the event"+"</th><th>"+"Quick description"+"</th><th>"+"First registered date"+"</th><th>"+"Consistent?"+"</th>";
 
 
 function imprimirTabla(eventosSeccion){  
