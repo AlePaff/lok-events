@@ -26,14 +26,33 @@ function getDayName(dateStr)
 
 
 
+// devuelve un objeto Date que tiene la hora actual en UTC. (para que dependa de una ciudad elegida ver el link)
+// https://www.techrepublic.com/article/convert-the-local-time-to-another-time-zone-with-this-javascript/
+function getUTC() {
+    // create Date object for current location
+    d = new Date();
+   
+    // convert to msec, add local time zone offset, get UTC time in msec
+    utc = d.getTime() + (d.getTimezoneOffset() * 60 * 1000);
+   
+    // create new Date object based on utc
+    nd = new Date(utc);
+   return nd;
+}
+
+
+
+
 crearTablas();
 async function crearTablas(){
    const response = await fetch("events.json");
    const datos = await response.json();
 
    // console.log(datos);
-   var today = new Date();
-   var tomorrow = new Date();
+   // var today = new Date();
+   // var tomorrow = new Date();
+   var today = getUTC();
+   var tomorrow = getUTC();
    tomorrow.setDate(tomorrow.getDate()+1);
 
    var arrayToday = [];       //lista de diccionarios
@@ -105,7 +124,6 @@ arraySoon.sort(function (a, b) {
 
 
 
-
 // mostrar tablas en pantalla
 nombresTabla = "<tr><th>"+"Events name"+"</th><th>"+"Next date"+"</th><th>"+"It repeats every: (days)"
 +"</th><th>"+"Duration of the event"+"</th><th>"+"Quick description"+"</th><th>"+"First registered date"+"</th><th>"+"Consistent?"+"</th>";
@@ -119,17 +137,19 @@ function imprimirTabla(eventosSeccion){
 
       dicActual = eventosSeccion[i];
 
-      if(dicActual.consistente == true){
-         // consist = '<td align="center" style="text-align:center; font-size:150%; font-weight:bold; color:green;">&#10004;</tr>';
-         consist = '<td align="center" style="text-align:center; font-size:150%; font-weight:bold; color:green;">&#10004;</tr>';
+      //no poner nada es lo mismo que poner == true
+      if(dicActual.consistente){
+         checkmark = '<td align="center" style="text-align:center; font-size:150%; font-weight:bold; color:green;">&#10004;</tr>';
       } else {
-         consist = '<td align="center" style="text-align:center; font-size:150%; font-weight:bold; color:red;">&#x2717;</tr>';
+         checkmark = '<td align="center" style="text-align:center; font-size:150%; font-weight:bold; color:red;">&#x2717;</tr>';
       }
 
       tabla += "<tr><td>" + dicActual.evento + "</td><td>"+ dicActual.proximoDia + "</td><td>"+ dicActual.periocidad
-      + "</td><td>"+ dicActual.duracion + "</td><td>"+ dicActual.descripcion + "</td><td>"+ dicActual.fechaInicio + consist;
+      + "</td><td>"+ dicActual.duracion + "</td><td>"+ dicActual.descripcion + "</td><td>"+ dicActual.fechaInicio + checkmark;
    }
 
    tabla += "</table>"
    return tabla
 };
+
+
