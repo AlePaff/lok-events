@@ -26,39 +26,7 @@ function getDayName(dateStr)
 
 
 
-// =============== test1
-// var event1 = 'The growth of the kingdom;27/04/2022; 14; 2; Investigation, construction and combat points';
-// var event2 = 'The great kingdom;24/05/2022; 14; 2; 5 stages: 1. train (up to 100k points), 2. fight (kill monsters up to 100k points) 3.gather (up to 100k event point) 4 power (up to 100k power points) 5. Kill event (up to 100k kill/injure points)';
-// // var eventos1 = event1.split(';');
-// var eventos1 = event2.split(';');     //borrar esta linea y dejar la anterior
-
-// const nameEvent1 = eventos1[0]
-// const dateEvent1 = new Date(convertToDate(eventos1[1]));
-
-// var periocidad = 14
-
-// document.write("El evento " + nameEvent1 + " que tuvo lugar el " +getDayName(dateEvent1)+ " se repetirá el " + getDayName(addDays(dateEvent1, periocidad)) + "</br></br>");
-// // =============== test2
-// var today = new Date();
-// document.write("Hoy es " + getDayName(today)+"</br>");
-// document.write("El evento que tuvo lugar el " + getDayName(dateEvent1) +"</br>");
-
-// var difference = today.getTime() - dateEvent1.getTime();             //me lo deja en milisegundos asi que debo transformarlo a dias
-// var days = Math.ceil(difference / (1000 * 3600 * 24));
-
-// document.write("la resta es de " + days + " dias"+"</br>");
-// var daysTillNextDate = Math.ceil(days/periocidad);
-// // alert(daysTillNextDate);
-// document.write(" se repetirá el " + getDayName(addDays(dateEvent1, daysTillNextDate*periocidad)) + "</br></br></br></br>");
-
-// ========== con datos
-
-
-
-
-
 crearTablas();
-
 async function crearTablas(){
    const response = await fetch("events.json");
    const datos = await response.json();
@@ -148,9 +116,18 @@ function imprimirTabla(eventosSeccion){
    tabla = "<table>";
    tabla += nombresTabla;
    for(var i = 0; i<eventosSeccion.length; i++){
+
       dicActual = eventosSeccion[i];
+
+      if(dicActual.consistente == true){
+         // consist = '<td align="center" style="text-align:center; font-size:150%; font-weight:bold; color:green;">&#10004;</tr>';
+         consist = '<td align="center" style="text-align:center; font-size:150%; font-weight:bold; color:green;">&#10004;</tr>';
+      } else {
+         consist = '<td align="center" style="text-align:center; font-size:150%; font-weight:bold; color:red;">&#x2717;</tr>';
+      }
+
       tabla += "<tr><td>" + dicActual.evento + "</td><td>"+ dicActual.proximoDia + "</td><td>"+ dicActual.periocidad
-      + "</td><td>"+ dicActual.duracion + "</td><td>"+ dicActual.descripcion + "</td><td>"+ dicActual.fechaInicio+"</td><td>"+dicActual.consistente+"</tr>";
+      + "</td><td>"+ dicActual.duracion + "</td><td>"+ dicActual.descripcion + "</td><td>"+ dicActual.fechaInicio + consist;
    }
 
    tabla += "</table>"
