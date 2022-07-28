@@ -2,15 +2,7 @@
 	padding: 20px;
 	margin-right: 20px;
 	margin-left: 20px;
-	
-
-background-color: #212529;
-}
-
-footer{
-	/*Tal vez un color gradiente https://cssgradient.io/*/
-	padding: 20px;
-	background-color: #1b2932;
+	background-color: #212529;
 }
 
 
@@ -46,10 +38,8 @@ td {
 }
 
 /*para striped rows*/
-/*
 tr:nth-child(even) {background-color: #2c3034;}
 tr:nth-child(odd) {background-color: #212529;}
-*/
 /*pasar mouse por encima y que resalte una fila*/
 tr:hover {background-color: #543245;}
 /*pero que no resalte la primera (pinta del mismo color que el de las columnas pares)*/
